@@ -17,7 +17,6 @@
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800">
 
-  <!-- Top Navigation Header -->
   <header class="bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
       <div class="flex items-center space-x-3">
@@ -66,7 +65,6 @@
   <!-- Main Content Container -->
   <main class="max-w-7xl mx-auto px-4 py-6">
 
-    <!-- TAB 1: EXECUTIVE DASHBOARD -->
     <section id="tab1" class="space-block">
       <!-- 4 Key Scorecards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
@@ -133,7 +131,7 @@
           </div>
         </div>
 
-        <!-- Card 4: Qualitative (Satisfaction & Smart Hospital) -->
+        <!-- Card 4: Qualitative -->
         <div class="glass-card rounded-2xl p-5 border border-slate-200 shadow-sm relative overflow-hidden">
           <div class="flex justify-between items-start">
             <div>
@@ -174,7 +172,6 @@
     </section>
 
 
-    <!-- TAB 2: MONTHLY DATA ENTRY (12-MONTH TABLE MATRIX) -->
     <section id="tab2" class="space-block hidden">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -192,6 +189,7 @@
             <thead class="bg-slate-100 text-slate-800 uppercase font-bold border-b border-slate-200">
               <tr>
                 <th class="p-3 border-r min-w-[180px]">ตัวชี้วัด</th>
+                <th class="p-3 border-r text-center w-28">ประเภท</th>
                 <th class="p-3 border-r text-center w-16">หน่วย</th>
                 <th class="p-3 border-r text-right bg-orange-50 w-24">เป้าหมายปี</th>
                 <th class="p-2 border-r text-center">ต.ค.</th>
@@ -220,7 +218,6 @@
     </section>
 
 
-    <!-- TAB 3: YEAR-OVER-YEAR COMPARISON (YoY) -->
     <section id="tab3" class="space-block hidden">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
         <h2 class="text-lg font-bold text-slate-800 mb-2 flex items-center">
@@ -243,7 +240,6 @@
     </section>
 
 
-    <!-- TAB 4: STRATEGIC HIERARCHY -->
     <section id="tab4" class="space-block hidden">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
         <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
@@ -263,7 +259,6 @@
   </main>
 
 
-  <!-- MODAL: EDIT 12 MONTH VALUES -->
   <div id="editModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-6 relative">
       <button onclick="closeEditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
@@ -299,7 +294,6 @@
   </div>
 
 
-  <!-- JAVASCRIPT LOGIC & API INTEGRATION -->
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwfxlseICQ-71YbjljB3c_cLvZAn2iCuiNcRLi-cIN3ilnokDWlzvhJu0etj0xegXTD/exec";
 
@@ -459,8 +453,13 @@
         if (achPct >= 95) badgeColor = "bg-emerald-100 text-emerald-700";
         else if (achPct >= 80) badgeColor = "bg-amber-100 text-amber-700";
 
+        const typeBadge = kpi.type === 'Quantitative' 
+          ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">เชิงปริมาณ</span>' 
+          : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">เชิงคุณภาพ</span>';
+
         html += `<tr class="hover:bg-slate-50 border-b border-slate-200">
           <td class="p-3 border-r font-medium text-slate-800">${kpi.code}. ${kpi.name}</td>
+          <td class="p-3 border-r text-center">${typeBadge}</td>
           <td class="p-3 border-r text-center text-slate-500">${kpi.unit}</td>
           <td class="p-3 border-r text-right font-bold bg-orange-50/50">${targetVal.toLocaleString()}</td>`;
 
@@ -487,10 +486,11 @@
     function openEditModal(kpiId) {
       const kpi = kpiMaster.find(k => k.id === kpiId);
       const yr = currentYear.toString();
+      const typeText = kpi.type === 'Quantitative' ? 'เชิงปริมาณ' : 'เชิงคุณภาพ';
       
       document.getElementById('modalKpiId').value = kpiId;
       document.getElementById('modalKpiTitle').innerText = `แก้ไขผลงานรายเดือน: ${kpi.name}`;
-      document.getElementById('modalKpiSub').innerText = `หน่วยนับ: ${kpi.unit} | ปีงบประมาณ ${currentYear}`;
+      document.getElementById('modalKpiSub').innerText = `ประเภท: ${typeText} | หน่วยนับ: ${kpi.unit} | ปีงบประมาณ ${currentYear}`;
 
       for (let m = 1; m <= 12; m++) {
         const input = document.getElementById(`m_input_${m}`);
