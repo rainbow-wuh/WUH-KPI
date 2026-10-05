@@ -726,7 +726,7 @@
     }
 
     function requestEdit(kpiId, isInternal = false) {
-      const pin = prompt("กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดแก้ไข (รหัส: 2569):");
+      const pin = prompt("กรุณากรอกรหัสผ่านเพื่อเข้าสู่โหมดแก้ไข (รหัส: ####):");
       if (pin === "2569") {
         openEditModal(kpiId, isInternal);
       } else if (pin !== null) {
